@@ -5,6 +5,7 @@ from gradio_client import Client, file
 import shutil
 import boto3
 import io
+import time
 
 s3_client = boto3.client(
     's3',
@@ -76,6 +77,7 @@ def index():
 
             # Here you would call your model processing function to generate the output
             result_img, segmentation_img = process_images(model_image_url,cloth_image_url)
+            time.sleep(50)
 
             key1 = generate_private_key()
             s3_client.upload_file(result_img, bucket_name, f'static/result/{key1}/img_result.png')
