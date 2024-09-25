@@ -118,13 +118,16 @@
         <form method="POST" enctype="multipart/form-data">
             <div class="form-group">
                 <label for="model_image">Upload Model Image:</label>
-                <input type="file" name="model_image" accept="image/*" required onchange="previewImage(event, 'model_preview')">
+                <input type="file" name="model_image" accept="image/*"  onchange="previewImage(event, 'model_preview')">
             </div>
 
             <div class="form-group">
                 <label for="cloth_image">Upload Cloth Image:</label>
-                <input type="file" name="cloth_image" accept="image/*" required onchange="previewImage(event, 'cloth_preview')">
+                <input type="file" name="cloth_image" accept="image/*"  onchange="previewImage(event, 'cloth_preview')">
             </div>
+            <input type="hidden" id="model_image_url" name="model_image_url">
+            <input type="hidden" id="cloth_image_url" name="cloth_image_url">
+
 
             <input type="submit" value="Upload and Try-On">
         </form>
@@ -132,23 +135,23 @@
         <div class="sample-images">
             <div>
                 <h2>Sample Model Images:</h2>
-                <img src="https://fptvton.s3.ap-southeast-2.amazonaws.com/static/1.png" alt="Sample Model 1" onclick="setSampleImage('model_preview', this.src)">
-                <img src="https://fptvton.s3.ap-southeast-2.amazonaws.com/static/2.png" alt="Sample Model 2" onclick="setSampleImage('model_preview', this.src)">
-                <img src="https://fptvton.s3.ap-southeast-2.amazonaws.com/static/5.png" alt="Sample Model 2" onclick="setSampleImage('model_preview', this.src)">
-                <img src="https://fptvton.s3.ap-southeast-2.amazonaws.com/static/6.png" alt="Sample Model 2" onclick="setSampleImage('model_preview', this.src)">
-                <img src="https://fptvton.s3.ap-southeast-2.amazonaws.com/static/7.png" alt="Sample Model 2" onclick="setSampleImage('model_preview', this.src)">
-                <img src="https://fptvton.s3.ap-southeast-2.amazonaws.com/static/8.png" alt="Sample Model 2" onclick="setSampleImage('model_preview', this.src)">
+                <img src="https://fptvton.s3.ap-southeast-2.amazonaws.com/static/1.png" alt="Sample Model 1" onclick="setSampleImage('model_preview', this.src, 'model_image')">
+                <img src="https://fptvton.s3.ap-southeast-2.amazonaws.com/static/2.png" alt="Sample Model 2" onclick="setSampleImage('model_preview', this.src, 'model_image')">
+                <img src="https://fptvton.s3.ap-southeast-2.amazonaws.com/static/5.png" alt="Sample Model 2" onclick="setSampleImage('model_preview', this.src, 'model_image')">
+                <img src="https://fptvton.s3.ap-southeast-2.amazonaws.com/static/6.png" alt="Sample Model 2" onclick="setSampleImage('model_preview', this.src, 'model_image')">
+                <img src="https://fptvton.s3.ap-southeast-2.amazonaws.com/static/7.png" alt="Sample Model 2" onclick="setSampleImage('model_preview', this.src, 'model_image')">
+                <img src="https://fptvton.s3.ap-southeast-2.amazonaws.com/static/8.png" alt="Sample Model 2" onclick="setSampleImage('model_preview', this.src, 'model_image')">
 
 
             </div>
             <div>
                 <h2>Sample Cloth Images:</h2>
-                <img src="https://fptvton.s3.ap-southeast-2.amazonaws.com/static/product/t-shirt-1.jpg" alt="Sample Cloth 1" onclick="setSampleImage('cloth_preview', this.src)">
-                <img src="https://fptvton.s3.ap-southeast-2.amazonaws.com/static/product/t-shirt-2.jpg" alt="Sample Cloth 1" onclick="setSampleImage('cloth_preview', this.src)">
-                <img src="https://fptvton.s3.ap-southeast-2.amazonaws.com/static/product/t-shirt-3.jpg" alt="Sample Cloth 1" onclick="setSampleImage('cloth_preview', this.src)">
-                <img src="https://fptvton.s3.ap-southeast-2.amazonaws.com/static/product/t-shirt-4.jpg" alt="Sample Cloth 1" onclick="setSampleImage('cloth_preview', this.src)">
-                <img src="https://fptvton.s3.ap-southeast-2.amazonaws.com/static/product/t-shirt-5.jpg" alt="Sample Cloth 1" onclick="setSampleImage('cloth_preview', this.src)">
-                <img src="https://fptvton.s3.ap-southeast-2.amazonaws.com/static/product/t-shirt-6.jpg" alt="Sample Cloth 1" onclick="setSampleImage('cloth_preview', this.src)">
+                <img src="https://fptvton.s3.ap-southeast-2.amazonaws.com/static/product/t-shirt-1.jpg" alt="Sample Cloth 1" onclick="setSampleImage('cloth_preview', this.src, 'cloth_image')">
+                <img src="https://fptvton.s3.ap-southeast-2.amazonaws.com/static/product/t-shirt-2.jpg" alt="Sample Cloth 1" onclick="setSampleImage('cloth_preview', this.src, 'cloth_image')">
+                <img src="https://fptvton.s3.ap-southeast-2.amazonaws.com/static/product/t-shirt-3.jpg" alt="Sample Cloth 1" onclick="setSampleImage('cloth_preview', this.src, 'cloth_image')">
+                <img src="https://fptvton.s3.ap-southeast-2.amazonaws.com/static/product/t-shirt-4.jpg" alt="Sample Cloth 1" onclick="setSampleImage('cloth_preview', this.src, 'cloth_image')">
+                <img src="https://fptvton.s3.ap-southeast-2.amazonaws.com/static/product/t-shirt-5.jpg" alt="Sample Cloth 1" onclick="setSampleImage('cloth_preview', this.src, 'cloth_image')">
+                <img src="https://fptvton.s3.ap-southeast-2.amazonaws.com/static/product/t-shirt-6.jpg" alt="Sample Cloth 1" onclick="setSampleImage('cloth_preview', this.src, 'cloth_image')">
 
             </div>
         </div>
@@ -176,9 +179,16 @@
             reader.readAsDataURL(event.target.files[0]);
         }
 
-        function setSampleImage(previewId, src) {
+        function setSampleImage(previewId, src, inputName) {
             const output = document.getElementById(previewId);
             output.src = src;
+
+            // Thay vì tạo blob, chỉ cần đặt URL vào input hidden
+            if (inputName === 'model_image') {
+                document.getElementById('model_image_url').value = src;
+            } else if (inputName === 'cloth_image') {
+                document.getElementById('cloth_image_url').value = src;
+            }
         }
     </script>
 
