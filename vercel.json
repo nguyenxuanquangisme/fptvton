@@ -1,11 +1,11 @@
 {
   "functions": {
     "api/app.py": {
-      "memory": 3009,
+      "memory": 1024,
       "maxDuration": 60
     },
     "api/app.py": {
-      "memory": 3009,
+      "memory": 1024,
       "maxDuration": 60
     }
   }
