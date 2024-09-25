@@ -92,9 +92,22 @@
             border-radius: 8px;
         }
 
-        #model_preview, #cloth_preview {
-            width: auto; /* Hoặc bạn có thể đặt kích thước cụ thể nếu cần */
+        .sample-images {
+            display: flex;
+            justify-content: space-around;
+            margin-top: 20px;
+        }
+
+        .sample-images img {
+            cursor: pointer;
+            width: 120px; /* Đặt kích thước cho các hình ảnh mẫu */
             height: auto;
+            border: 2px solid transparent;
+            transition: border-color 0.3s ease;
+        }
+
+        .sample-images img:hover {
+            border-color: #4a90e2; /* Thay đổi viền khi hover */
         }
     </style>
 </head>
@@ -115,6 +128,30 @@
 
             <input type="submit" value="Upload and Try-On">
         </form>
+
+        <div class="sample-images">
+            <div>
+                <h2>Sample Model Images:</h2>
+                <img src="https://fptvton.s3.ap-southeast-2.amazonaws.com/static/1.png" alt="Sample Model 1" onclick="setSampleImage('model_preview', this.src)">
+                <img src="https://fptvton.s3.ap-southeast-2.amazonaws.com/static/2.png" alt="Sample Model 2" onclick="setSampleImage('model_preview', this.src)">
+                <img src="https://fptvton.s3.ap-southeast-2.amazonaws.com/static/5.png" alt="Sample Model 2" onclick="setSampleImage('model_preview', this.src)">
+                <img src="https://fptvton.s3.ap-southeast-2.amazonaws.com/static/6.png" alt="Sample Model 2" onclick="setSampleImage('model_preview', this.src)">
+                <img src="https://fptvton.s3.ap-southeast-2.amazonaws.com/static/7.png" alt="Sample Model 2" onclick="setSampleImage('model_preview', this.src)">
+                <img src="https://fptvton.s3.ap-southeast-2.amazonaws.com/static/8.png" alt="Sample Model 2" onclick="setSampleImage('model_preview', this.src)">
+
+
+            </div>
+            <div>
+                <h2>Sample Cloth Images:</h2>
+                <img src="https://fptvton.s3.ap-southeast-2.amazonaws.com/static/product/t-shirt-1.jpg" alt="Sample Cloth 1" onclick="setSampleImage('cloth_preview', this.src)">
+                <img src="https://fptvton.s3.ap-southeast-2.amazonaws.com/static/product/t-shirt-2.jpg" alt="Sample Cloth 1" onclick="setSampleImage('cloth_preview', this.src)">
+                <img src="https://fptvton.s3.ap-southeast-2.amazonaws.com/static/product/t-shirt-3.jpg" alt="Sample Cloth 1" onclick="setSampleImage('cloth_preview', this.src)">
+                <img src="https://fptvton.s3.ap-southeast-2.amazonaws.com/static/product/t-shirt-4.jpg" alt="Sample Cloth 1" onclick="setSampleImage('cloth_preview', this.src)">
+                <img src="https://fptvton.s3.ap-southeast-2.amazonaws.com/static/product/t-shirt-5.jpg" alt="Sample Cloth 1" onclick="setSampleImage('cloth_preview', this.src)">
+                <img src="https://fptvton.s3.ap-southeast-2.amazonaws.com/static/product/t-shirt-6.jpg" alt="Sample Cloth 1" onclick="setSampleImage('cloth_preview', this.src)">
+
+            </div>
+        </div>
 
         <div class="preview-section">
             <div class="preview">
@@ -137,6 +174,11 @@
                 output.src = reader.result;
             }
             reader.readAsDataURL(event.target.files[0]);
+        }
+
+        function setSampleImage(previewId, src) {
+            const output = document.getElementById(previewId);
+            output.src = src;
         }
     </script>
 
