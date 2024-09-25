@@ -41,6 +41,8 @@ def index():
         # Get the files from the form
         model_image = request.files['model_image']
         cloth_image = request.files['cloth_image']
+        model_image_url = request.form.get('model_image_url')
+        cloth_image_url = request.form.get('cloth_image_url')
 
 
         def process_images(model_img_path, cloth_img_path):
@@ -63,7 +65,62 @@ def index():
             result_img, segmentation_img = result
             return result_img, segmentation_img
 
+        if model_image and cloth_image_url:
+            key2 = generate_private_key()
+            # Upload to S3
+            s3_client.upload_fileobj(model_image, bucket_name, f'static/uploads/{key2}/image_model.png')
+            model_image_url = f'https://fptvton.s3.ap-southeast-2.amazonaws.com/static/uploads/{key2}/image_model.png'
+            # Here you would call your model processing function to generate the output
+            result_img, segmentation_img = process_images(model_image_url, cloth_image_url)
 
+            key1 = generate_private_key()
+            s3_client.upload_file(result_img, bucket_name, f'static/result/{key1}/img_result.png')
+            s3_client.upload_file(segmentation_img, bucket_name, f'static/segmentation/{key1}/img_segmentation.png')
+
+            segmentation_img_url = f'https://fptvton.s3.ap-southeast-2.amazonaws.com/static/segmentation/{key1}/img_segmentation.png'
+            result_img_url = f'https://fptvton.s3.ap-southeast-2.amazonaws.com/static/result/{key1}/img_result.png'
+
+            # Pass the results to the result page
+            return render_template('result.html', segmentation_img_url=segmentation_img_url,
+                                   result_img_url=result_img_url)
+
+
+        if model_image_url and cloth_image:
+            key2 = generate_private_key()
+            # Upload to S3
+            s3_client.upload_fileobj(cloth_image, bucket_name, f'static/uploads/{key2}/image_cloth.png')
+            cloth_image_url = f'https://fptvton.s3.ap-southeast-2.amazonaws.com/static/uploads/{key2}/image_cloth.png'
+            # Here you would call your model processing function to generate the output
+            result_img, segmentation_img = process_images(model_image_url, cloth_image_url)
+
+            key1 = generate_private_key()
+            s3_client.upload_file(result_img, bucket_name, f'static/result/{key1}/img_result.png')
+            s3_client.upload_file(segmentation_img, bucket_name, f'static/segmentation/{key1}/img_segmentation.png')
+
+            segmentation_img_url = f'https://fptvton.s3.ap-southeast-2.amazonaws.com/static/segmentation/{key1}/img_segmentation.png'
+            result_img_url = f'https://fptvton.s3.ap-southeast-2.amazonaws.com/static/result/{key1}/img_result.png'
+
+            # Pass the results to the result page
+            return render_template('result.html', segmentation_img_url=segmentation_img_url,
+                                   result_img_url=result_img_url)
+
+
+
+
+        if model_image_url and cloth_image_url:
+            # Here you would call your model processing function to generate the output
+            result_img, segmentation_img = process_images(model_image_url, cloth_image_url)
+
+            key1 = generate_private_key()
+            s3_client.upload_file(result_img, bucket_name, f'static/result/{key1}/img_result.png')
+            s3_client.upload_file(segmentation_img, bucket_name, f'static/segmentation/{key1}/img_segmentation.png')
+
+            segmentation_img_url = f'https://fptvton.s3.ap-southeast-2.amazonaws.com/static/segmentation/{key1}/img_segmentation.png'
+            result_img_url = f'https://fptvton.s3.ap-southeast-2.amazonaws.com/static/result/{key1}/img_result.png'
+
+            # Pass the results to the result page
+            return render_template('result.html', segmentation_img_url=segmentation_img_url,
+                                   result_img_url=result_img_url)
 
         if model_image and cloth_image:
 
